@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ControlTemplate x:Key="CommonErrorTemplate">
+        <DockPanel LastChildFill="True">
+            <Border BorderBrush="Red" BorderThickness="1">
+                <AdornedElementPlaceholder />
+            </Border>
+        </DockPanel>
+    </ControlTemplate>
+
+    <Style x:Key="TextBoxValidated" TargetType="TextBox">
+        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                    Path=(Validation.Errors)[0].ErrorContent}"/>
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsEnabled" Value="True" />
+                    <Condition Property="IsVisible" Value="True" />
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Validation.ErrorTemplate" Value="{StaticResource CommonErrorTemplate}"/>
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBoxSelected" TargetType="TextBox" BasedOn="{StaticResource TextBoxValidated}">
+        <Style.Triggers>
+            <Trigger Property="IsSelectionActive" Value="True">
+                <Setter Property="Background" Value="Gray"/>
+            </Trigger>
+            <Trigger Property="IsSelectionActive" Value="False">
+                <Setter Property="Background" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="LabelStyle" TargetType="Label">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+    </Style>
+
+    <Style x:Key="RadioStyle" TargetType="RadioButton">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+    </Style>
+
+    <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+
+    <Style x:Key="CheckboxStyle" TargetType="{x:Type CheckBox}">
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+
+
+</ResourceDictionary>
