@@ -10,15 +10,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.WPF.WPFUtilities;
+using System.Windows;
 
 namespace EmployeeManagement.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : ViewModel
     {
         private readonly ApiService apiService;
-        private ObservableCollection<User> users;
+        private ObservableCollection<Employee> users;
 
-        public ObservableCollection<User> Users
+        public ObservableCollection<Employee> Users
         {
             get => users;
             set
@@ -35,18 +36,21 @@ namespace EmployeeManagement.ViewModels
         {
             apiService = new ApiService();
             LoadUsersCommand = new DelegatingCommand(OnLoadUsers);
+            apiService.ApiErrorOccurred += HandleApiError;
         }
 
         private async void OnLoadUsers(object parameter)
         {
-            Users = new ObservableCollection<User>(await apiService.GetAllUsersAsync());
+            Users = new ObservableCollection<Employee>(await apiService.GetEmployeesAsync());
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void HandleApiError(string errorMessage)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            // Show the error message in a MessageBox or some other UI element
+            MessageBox.Show(errorMessage, "API Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+
+
     }
 }

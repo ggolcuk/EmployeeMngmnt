@@ -2,158 +2,89 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Windows;
 using EmployeeManagement.Models;
-
+using EmployeeManagement.Utilities;
+using Newtonsoft.Json;
 
 namespace EmployeeManagement.Services
 {
     public class ApiService
     {
-        private readonly string baseUrl = "https://gorest.co.in/public/v2/";
-        private readonly string apiToken = "0bf7fb56e6a27cbcadc402fc2fce8e3aa9ac2b40d4190698eb4e8df9284e2023";
-        private readonly HttpClient httpClient;
+        private readonly HttpClient _httpClient;
+
+        public event Action<string>? ApiErrorOccurred;
 
         public ApiService()
         {
-            httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiToken}");
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri(Properties.Settings.Default.BaseUrl)
+            };
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {Properties.Settings.Default.ApiKey}");
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<Employee>> GetEmployeesAsync(string firstName = null, int page = 1)
         {
-            try
+            string apiUrl = "public/v2/users";
+
+            if (!string.IsNullOrEmpty(firstName))
             {
-                HttpResponseMessage response = await httpClient.GetAsync($"{baseUrl}users");
-                if (response.IsSuccessStatusCode)
-                {
-                    List<User> users = await response.Content.ReadFromJsonAsync<List<User>>();
-                    return users;
-                }
-                else
-                {
-                    ShowErrorMessage("Error", $"Error: {response.StatusCode}");
-                    return new List<User>();
-                }
+                apiUrl += $"?first_name={Uri.EscapeDataString(firstName)}";
             }
-            catch (Exception ex)
-            {
-                ShowErrorMessage("Error", $"Error: {ex.Message}");
-                return new List<User>();
-            }
+
+            apiUrl += $"?page={page}";
+
+            return await ApiUtilities.HandleApiCallAsync<List<Employee>>(
+                async () => await _httpClient.GetAsync(apiUrl),
+                "Error getting employees"
+            ) ?? new List<Employee>();
         }
-        public async Task<User> CreateUserAsync(User newUser)
+
+        public async Task<Employee> GetEmployeeAsync(int id)
         {
-            try
-            {
-                HttpResponseMessage response = await httpClient.PostAsJsonAsync($"{baseUrl}users", newUser);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    User createdUser = await response.Content.ReadFromJsonAsync<User>();
-                    return createdUser;
-                }
-                else
-                {
-                    ShowErrorMessage("Error", $"Error: {response.StatusCode}");
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage("Error", $"Error: {ex.Message}");
-                return null;
-            }
+            return await ApiUtilities.HandleApiCallAsync<Employee>(
+                async () => await _httpClient.GetAsync($"public/v2/users/{id}"),
+                "Error getting employee"
+            );
         }
 
-        public async Task<User> UpdateUserAsync(User updatedUser)
+        public async Task<Employee> CreateEmployeeAsync(Employee employee)
         {
-            try
-            {
-                HttpResponseMessage response = await httpClient.PutAsJsonAsync($"{baseUrl}users/{updatedUser.Id}", updatedUser);
+            var json = JsonConvert.SerializeObject(employee);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    User user = await response.Content.ReadFromJsonAsync<User>();
-                    return user;
-                }
-                else
-                {
-                    ShowErrorMessage("Error", $"Error: {response.StatusCode}");
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage("Error", $"Error: {ex.Message}");
-                return null;
-            }
+            return await ApiUtilities.HandleApiCallAsync<Employee>(
+                async () => await _httpClient.PostAsync("public/v2/users", content),
+                "Error creating employee"
+            );
         }
 
-        public async Task<User> UpdateUserPatchAsync(int userId, Dictionary<string, object> patchValues)
+        public async Task<Employee> UpdateEmployeeAsync(int id, Employee employee)
         {
-            try
-            {
-                var patchContent = new StringContent(JsonSerializer.Serialize(patchValues), Encoding.UTF8, "application/json");
+            var json = JsonConvert.SerializeObject(employee);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await httpClient.PatchAsync($"{baseUrl}users/{userId}", patchContent);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    User user = await response.Content.ReadFromJsonAsync<User>();
-                    return user;
-                }
-                else
-                {
-                    ShowErrorMessage("Error", $"Error: {response.StatusCode}");
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage("Error", $"Error: {ex.Message}");
-                return null;
-            }
+            return await ApiUtilities.HandleApiCallAsync<Employee>(
+                async () => await _httpClient.PutAsync($"public/v2/users/{id}", content),
+                "Error updating employee"
+            );
         }
 
-        // Other methods and error handling
-
-        
-
-        public async Task<bool> DeleteUserAsync(int userId)
+        public async Task<bool> DeleteEmployeeAsync(int id)
         {
-            try
-            {
-                HttpResponseMessage response = await httpClient.DeleteAsync($"{baseUrl}users/{userId}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-                else
-                {
-                    ShowErrorMessage("Error", $"Error: {response.StatusCode}");
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage("Error", $"Error: {ex.Message}");
-                return false;
-            }
+            return await ApiUtilities.HandleApiCallAsync<bool>(
+                async () => await _httpClient.DeleteAsync($"public/v2/users/{id}"),
+                "Error deleting employee"
+            );
         }
 
-        private void ShowErrorMessage(string title, string message)
-        {
-            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+    }
 
-
-
+    // Create a class to represent the response structure from the API
+    public class EmployeeResponse
+    {
+        public List<Employee> Data { get; set; }
     }
 }
