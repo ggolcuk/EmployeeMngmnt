@@ -4,30 +4,31 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Common.WPF.ApiUtilities;
 using EmployeeManagement.Models;
-using EmployeeManagement.Utilities;
 using Newtonsoft.Json;
 
 namespace EmployeeManagement.Services
 {
+    // Service class responsible for employee-related operations
     public class ApiService
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClient _httpClient;
 
+        // Event that triggers when an API error occurs
         public event Action<string>? ApiErrorOccurred;
 
-        public ApiService()
+   
+
+        public ApiService(IHttpClient httpClient)
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(Properties.Settings.Default.BaseUrl)
-            };
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {Properties.Settings.Default.ApiKey}");
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
+        // Retrieve a list of employees based on parameters
         public async Task<List<Employee>> GetEmployeesAsync(string firstName = null, int page = 1)
         {
-            string apiUrl = "public/v2/users";
+            string apiUrl = "users";
 
             if (!string.IsNullOrEmpty(firstName))
             {
@@ -38,53 +39,77 @@ namespace EmployeeManagement.Services
 
             return await ApiUtilities.HandleApiCallAsync<List<Employee>>(
                 async () => await _httpClient.GetAsync(apiUrl),
-                "Error getting employees"
+                "Error getting employees",
+                ApiErrorOccurred
             ) ?? new List<Employee>();
         }
 
+        public async Task<List<Employee>> GetAllEmployeesAsync()
+        {
+            string apiUrl = "users";
+
+            return await ApiUtilities.HandleApiCallAsync<List<Employee>>(
+                async () => await _httpClient.GetAsync(apiUrl),
+                "Error getting employees",
+                ApiErrorOccurred
+            ) ?? new List<Employee>();
+        }
+
+
+
+
+
+        // Retrieve a single employee by ID
         public async Task<Employee> GetEmployeeAsync(int id)
         {
             return await ApiUtilities.HandleApiCallAsync<Employee>(
-                async () => await _httpClient.GetAsync($"public/v2/users/{id}"),
-                "Error getting employee"
+                async () => await _httpClient.GetAsync($"users/{id}"),
+                "Error getting employee",
+                ApiErrorOccurred
             );
         }
 
+        // Create a new employee
         public async Task<Employee> CreateEmployeeAsync(Employee employee)
         {
             var json = JsonConvert.SerializeObject(employee);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
             return await ApiUtilities.HandleApiCallAsync<Employee>(
-                async () => await _httpClient.PostAsync("public/v2/users", content),
-                "Error creating employee"
+                async () => await _httpClient.PostAsync("users", content),
+                "Error creating employee",
+                ApiErrorOccurred
             );
         }
 
+        // Update an existing employee by ID
         public async Task<Employee> UpdateEmployeeAsync(int id, Employee employee)
         {
             var json = JsonConvert.SerializeObject(employee);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
             return await ApiUtilities.HandleApiCallAsync<Employee>(
-                async () => await _httpClient.PutAsync($"public/v2/users/{id}", content),
-                "Error updating employee"
+                async () => await _httpClient.PutAsync($"users/{id}", content),
+                "Error updating employee",
+                ApiErrorOccurred
             );
         }
 
+        // Delete an employee by ID
         public async Task<bool> DeleteEmployeeAsync(int id)
         {
             return await ApiUtilities.HandleApiCallAsync<bool>(
-                async () => await _httpClient.DeleteAsync($"public/v2/users/{id}"),
-                "Error deleting employee"
-            );
+                 async () =>
+                 {
+                     var response = await _httpClient.DeleteAsync($"users/{id}");
+                     return response;
+                 },
+                 "Error deleting employee",
+                 ApiErrorOccurred
+             );
         }
-
     }
 
-    // Create a class to represent the response structure from the API
-    public class EmployeeResponse
-    {
-        public List<Employee> Data { get; set; }
-    }
 }
+
+

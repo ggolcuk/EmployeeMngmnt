@@ -26,9 +26,9 @@
         </Grid.RowDefinitions>
 
                 <Button Content="Refresh" Command="{Binding LoadUsersCommand}" CommandParameter="{x:Null}" Margin="10"/>
-    
 
-    <ListView ItemsSource="{Binding Users}" SelectionMode="Single" Grid.Row="1">
+
+        <ListView ItemsSource="{Binding Employees}" SelectionMode="Single" Grid.Row="1">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="50"/>
