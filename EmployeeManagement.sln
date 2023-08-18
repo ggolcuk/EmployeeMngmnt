@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagement", "EmployeeManagement\EmployeeManagement.csproj", "{4E74C461-2655-49B1-8A7F-6E543B5702F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagement", "EmployeeManagement\EmployeeManagement.csproj", "{4E74C461-2655-49B1-8A7F-6E543B5702F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.WPF", "Common.WPF\Common.WPF.csproj", "{57CBDEB5-3CE4-42A0-924B-79B34B5FC077}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.WPF", "Common.WPF\Common.WPF.csproj", "{57CBDEB5-3CE4-42A0-924B-79B34B5FC077}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagement.Tests", "EmployeeManagement.Tests\EmployeeManagement.Tests.csproj", "{2C4AF524-2509-4ACA-AAF3-453269459DA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{57CBDEB5-3CE4-42A0-924B-79B34B5FC077}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57CBDEB5-3CE4-42A0-924B-79B34B5FC077}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57CBDEB5-3CE4-42A0-924B-79B34B5FC077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C4AF524-2509-4ACA-AAF3-453269459DA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C4AF524-2509-4ACA-AAF3-453269459DA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C4AF524-2509-4ACA-AAF3-453269459DA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C4AF524-2509-4ACA-AAF3-453269459DA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
