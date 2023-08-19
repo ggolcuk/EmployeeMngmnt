@@ -6,8 +6,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="110.2.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <Folder Include="UIUtilities\" />
+  </ItemGroup>
+
+
 
 </Project>
