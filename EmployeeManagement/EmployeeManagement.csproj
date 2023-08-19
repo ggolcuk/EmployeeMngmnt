@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common.API\Common.API.csproj" />
     <ProjectReference Include="..\Common.WPF\Common.WPF.csproj" />
   </ItemGroup>
 

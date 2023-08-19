@@ -4,21 +4,21 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Common.WPF.ApiUtilities;
+using Common.API.ApiUtilities;
 using EmployeeManagement.Models;
 using Newtonsoft.Json;
 
 namespace EmployeeManagement.Services
 {
     // Service class responsible for employee-related operations
-    public class ApiService
+    public class ApiService : IApiService
     {
         private readonly IHttpClient _httpClient;
 
         // Event that triggers when an API error occurs
         public event Action<string>? ApiErrorOccurred;
 
-   
+
 
         public ApiService(IHttpClient httpClient)
         {
@@ -26,17 +26,27 @@ namespace EmployeeManagement.Services
         }
 
         // Retrieve a list of employees based on parameters
-        public async Task<List<Employee>> GetEmployeesAsync(string firstName = null, int page = 1)
+        public async Task<List<Employee>> GetEmployeesAsync(SearchParameters searchParameters)
         {
-            string apiUrl = "users";
+            string apiUrl = $"users?page={searchParameters.Page}&per_page={searchParameters.PerPage}";
 
-            if (!string.IsNullOrEmpty(firstName))
+            if (!string.IsNullOrEmpty(searchParameters.Name))
             {
-                apiUrl += $"?first_name={Uri.EscapeDataString(firstName)}";
+                apiUrl += $"&name={Uri.EscapeDataString(searchParameters.Name)}";
+            }
+            if (!string.IsNullOrEmpty(searchParameters.Email))
+            {
+                apiUrl += $"&email={Uri.EscapeDataString(searchParameters.Email)}";
+            }
+            if (!string.IsNullOrEmpty(searchParameters.Gender))
+            {
+                apiUrl += $"&gender={Uri.EscapeDataString(searchParameters.Gender)}";
+            }
+            if (!string.IsNullOrEmpty(searchParameters.Status))
+            {
+                apiUrl += $"&status={Uri.EscapeDataString(searchParameters.Status)}";
             }
 
-            apiUrl += $"?page={page}";
-
             return await ApiUtilities.HandleApiCallAsync<List<Employee>>(
                 async () => await _httpClient.GetAsync(apiUrl),
                 "Error getting employees",
@@ -44,7 +54,8 @@ namespace EmployeeManagement.Services
             ) ?? new List<Employee>();
         }
 
-        public async Task<List<Employee>> GetAllEmployeesAsync()
+
+        public async Task<List<Employee>> GetEmployeesAsync()
         {
             string apiUrl = "users";
 
@@ -54,9 +65,6 @@ namespace EmployeeManagement.Services
                 ApiErrorOccurred
             ) ?? new List<Employee>();
         }
-
-
-
 
 
         // Retrieve a single employee by ID

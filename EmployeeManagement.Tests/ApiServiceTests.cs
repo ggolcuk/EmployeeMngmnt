@@ -2,7 +2,9 @@ using EmployeeManagement.Models;
 using EmployeeManagement.Services;
 using Moq;
 using Newtonsoft.Json;
+using System;
 using System.Net;
+using System.Reflection.Metadata;
 
 public class ApiServiceTests
 {
@@ -19,8 +21,8 @@ public class ApiServiceTests
                           
                             new List<Employee>
                               {
-                                   new Employee { Id = 1, Name = "John", Email = "john@example.com", Gender = "Male", Status = "Active" },
-                                   new Employee { Id = 2, Name = "Jane", Email = "jane@example.com", Gender = "Female", Status = "Active" }
+                                   new Employee { id = 1, name = "John", email = "john@example.com", gender = "Male", Status = "Active" },
+                                   new Employee { id = 2, name = "Jane", email = "jane@example.com", gender = "Female", Status = "Active" }
                               }
                           ))
                       });
@@ -47,7 +49,7 @@ public class ApiServiceTests
                           Content = new StringContent(JsonConvert.SerializeObject(
                           
                          
-                                  new Employee { Id = 1, Name = "John", Email = "john@example.com", Gender = "Male", Status = "Active" }
+                                  new Employee { id = 1, name = "John", email = "john@example.com", gender = "Male", Status = "Active" }
                               
                           ))
                       });
@@ -59,7 +61,7 @@ public class ApiServiceTests
 
         // Assert
         Assert.NotNull(employee);
-        Assert.Equal("John", employee.Name);
+        Assert.Equal("John", employee.name);
     }
 
     [Fact]
@@ -75,8 +77,8 @@ public class ApiServiceTests
                           
                                new List<Employee>
                               {
-                              new Employee { Id = 1, Name = "John", Email = "john@example.com", Gender = "Male", Status = "Active" },
-                              new Employee { Id = 2, Name = "Jane", Email = "jane@example.com", Gender = "Female", Status = "Active" }
+                              new Employee { id = 1, name = "John", email = "john@example.com", gender = "Male", Status = "Active" },
+                              new Employee { id = 2, name = "Jane", email = "jane@example.com", gender = "Female", Status = "Active" }
                               }
                           ))
                       });
@@ -84,7 +86,7 @@ public class ApiServiceTests
         var apiService = new ApiService(mockHttpClient.Object);
 
         // Act
-        var employee = await apiService.GetAllEmployeesAsync();
+        var employee = await apiService.GetEmployeesAsync();
 
         // Assert
         Assert.NotNull(employee);
@@ -97,7 +99,7 @@ public class ApiServiceTests
     {
         // Arrange
         var mockHttpClient = new Mock<IHttpClient>();
-        var newEmployee = new Employee { Id = 3, Name = "Alice", Email = "alice@example.com", Gender = "Female", Status = "Active" };
+        var newEmployee = new Employee { id = 3, name = "Alice", email = "alice@example.com", gender = "Female", Status = "Active" };
         mockHttpClient.Setup(client => client.PostAsync(It.IsAny<string>(), It.IsAny<HttpContent>()))
                       .ReturnsAsync(new HttpResponseMessage
                       {
@@ -112,8 +114,8 @@ public class ApiServiceTests
 
         // Assert
         Assert.NotNull(createdEmployee);
-        Assert.Equal(3, createdEmployee.Id);
-        Assert.Equal("Alice", createdEmployee.Name);
+        Assert.Equal(3, createdEmployee.id);
+        Assert.Equal("Alice", createdEmployee.name);
     }
 
     [Fact]
@@ -121,7 +123,7 @@ public class ApiServiceTests
     {
         // Arrange
         var mockHttpClient = new Mock<IHttpClient>();
-        var updatedEmployee = new Employee { Id = 1, Name = "Updated John" };
+        var updatedEmployee = new Employee { id = 1, name = "Updated John" };
         mockHttpClient.Setup(client => client.PutAsync(It.IsAny<string>(), It.IsAny<HttpContent>()))
                       .ReturnsAsync(new HttpResponseMessage
                       {
@@ -136,8 +138,8 @@ public class ApiServiceTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(1, result.Id);
-        Assert.Equal("Updated John", result.Name);
+        Assert.Equal(1, result.id);
+        Assert.Equal("Updated John", result.name);
     }
 
     [Fact]
@@ -156,4 +158,81 @@ public class ApiServiceTests
         // Assert
         Assert.True(result);
     }
+
+    [Fact]
+    public async Task DeleteEmployeeAsync_ShouldReturnFalseOnFailure()
+    {
+        // Arrange
+        var mockHttpClient = new Mock<IHttpClient>();
+        mockHttpClient.Setup(client => client.DeleteAsync(It.IsAny<string>()))
+                      .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.NotFound });
+
+        var apiService = new ApiService(mockHttpClient.Object);
+
+        // Act
+        var result = await apiService.DeleteEmployeeAsync(1);
+
+        // Assert
+        Assert.False(result);
+    }
+
+   [Fact]
+    public async Task UpdateEmployeeAsync_ShouldHandleUpdateFailure()
+    {
+        // Arrange
+        var mockHttpClient = new Mock<IHttpClient>();
+        var updatedEmployee = new Employee { id = 1, name = "Updated John" };
+
+        // Setup the mock to return an error response when PutAsync is called
+        mockHttpClient.Setup(client => client.PutAsync(It.IsAny<string>(), It.IsAny<HttpContent>()))
+                      .ReturnsAsync(new HttpResponseMessage
+                      {
+                          StatusCode = HttpStatusCode.InternalServerError  // Simulate an error response
+                      });
+
+        var apiService = new ApiService(mockHttpClient.Object);
+
+        // Act
+        var result = await apiService.UpdateEmployeeAsync(1, updatedEmployee);
+
+        // Assert
+        Assert.Null(result);  // Assert that the result is null indicating an error
+                              
+    }
+
+    [Fact]
+    public async Task GetEmployeesAsync_ShouldReturnListOfEmployees_WithPage()
+    {
+        // Arrange
+        var mockHttpClient = new Mock<IHttpClient>();
+        var apiService = new ApiService(mockHttpClient.Object);
+
+        var expectedEmployees = new List<Employee>
+        {
+            new Employee { id = 1, name = "John Doe" },
+            new Employee { id = 2, name = "Jane Smith" }
+        };
+
+        var responseContent = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(expectedEmployees));
+        responseContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+        var mockResponse = new HttpResponseMessage(HttpStatusCode.OK) { Content = responseContent };
+        mockHttpClient.Setup(client => client.GetAsync(It.IsAny<string>())).ReturnsAsync(mockResponse);
+
+        SearchParameters sp = new SearchParameters();
+
+        // Act
+        var result = await apiService.GetEmployeesAsync(sp);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expectedEmployees.Count, result.Count);
+
+        for (int i = 0; i < expectedEmployees.Count; i++)
+        {
+            Assert.Equal(expectedEmployees[i].id, result[i].id);
+            Assert.Equal(expectedEmployees[i].name, result[i].name);
+        }
+    }
+
 }
