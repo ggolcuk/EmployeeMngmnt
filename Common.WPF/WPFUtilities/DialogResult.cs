@@ -9,13 +9,24 @@ namespace Common.WPF.WPFUtilities
 {
     public class DialogService
     {
-        public DialogResult ShowDialog(string message, string caption, MessageBoxButton buttons)
+        public static DialogResult ShowDialog(string message, string caption, MessageBoxButton buttons)
         {
             MessageBoxResult result = MessageBox.Show(message, caption, buttons);
             return ConvertToDialogResult(result);
         }
 
-        private DialogResult ConvertToDialogResult(MessageBoxResult result)
+        public static async Task<DialogResult> ShowDialogAsync(string message, string caption, MessageBoxButton buttons)
+        {
+            MessageBoxResult result = await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                return MessageBox.Show(message, caption, buttons);
+            });
+
+            return ConvertToDialogResult(result);
+        }
+
+
+        private static DialogResult ConvertToDialogResult(MessageBoxResult result)
         {
             switch (result)
             {

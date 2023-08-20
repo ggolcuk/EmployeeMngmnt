@@ -3,7 +3,15 @@
                     xmlns:converter="clr-namespace:Common.WPF.Converters"
                     xmlns:utilities="clr-namespace:Common.WPF.UIUtilities"
                     >
-    
+
+
+    <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <converter:CreateUpdateConverter x:Key="CreateUpdateConverter" />
+
+    <SolidColorBrush x:Key="brushWatermarkBackground" Color="White" />
+    <SolidColorBrush x:Key="brushWatermarkForeground" Color="LightSteelBlue" />
+    <SolidColorBrush x:Key="brushWatermarkBorder" Color="Gray" />
+
     <ControlTemplate x:Key="CommonErrorTemplate">
         <DockPanel LastChildFill="True">
             <Border BorderBrush="Red" BorderThickness="1">
@@ -12,21 +20,12 @@
         </DockPanel>
     </ControlTemplate>
 
-    <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-
 
     <Style x:Key="EmptyHeaderStyle" TargetType="GridViewColumnHeader">
         <Setter Property="Visibility" Value="Collapsed"/>
     </Style>
 
-    <SolidColorBrush x:Key="brushWatermarkBackground" Color="White" />
-    <SolidColorBrush x:Key="brushWatermarkForeground" Color="LightSteelBlue" />
-    <SolidColorBrush x:Key="brushWatermarkBorder" Color="Gray" />
-
-
-
-    <Style x:Key="TextBlockStyle" TargetType="TextBlock">
-        
+    <Style x:Key="TextBlockStyle" TargetType="TextBlock">        
         <Setter Property="VerticalAlignment" Value="Center"></Setter>
     </Style>
 

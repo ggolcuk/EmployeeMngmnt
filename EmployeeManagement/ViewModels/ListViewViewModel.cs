@@ -46,7 +46,7 @@ namespace EmployeeManagement.ViewModels
             RefreshCommand = new DelegatingCommand(Refresh);
             SearchCommand = new DelegatingCommand(Search);
             AddCommand = new DelegatingCommand(Add);
-            UpdateCommand = new DelegatingCommand(Update);
+            UpdateCommand = new DelegatingCommand(CreateOrUpdate);
             DeleteCommand = new DelegatingCommand(Delete);
 
             Refresh(null);
@@ -88,30 +88,61 @@ namespace EmployeeManagement.ViewModels
 
         private void Add()
         {
-            // Implement your add logic here
+            var newEmployee = new EmployeeViewModel(new Employee()) { IsCreated = false };
+            Employees.Insert(0, newEmployee);
+           
         }
 
-        private async void Update(object parameter)
+        private async void CreateOrUpdate(object parameter)
         {
-            if (parameter is EmployeeViewModel employeeViewModel)
+            if (!(parameter is EmployeeViewModel employeeViewModel))
+                return;
+
+            if (employeeViewModel.IsCreated)
             {
-                //Check if the Employee is changes by someone else
-                var apiemployee = await ApiService.GetEmployeeAsync(employeeViewModel.Id);
-
-                if (apiemployee != null)
-                {
-                    if (!apiemployee.IsEqual(employeeViewModel.MainEmployee))
-                    {
-                        var result = DialogService.ShowDialog($"Selected employee parameters already changed by someone else.", "Select Okay to continue editing, Cancel to refresh the list", MessageBoxButton.OKCancel);
-
-                    }
-                }
-
-
-                await UpdateAsync(employeeViewModel);
-
+                await UpdateExistingEmployeeAsync(employeeViewModel);
+            }
+            else
+            {
+                await CreateNewEmployeeAsync(employeeViewModel);
             }
         }
+
+        private async Task UpdateExistingEmployeeAsync(EmployeeViewModel employeeViewModel)
+        {
+            var apiEmployee = await ApiService.GetEmployeeAsync(employeeViewModel.Id);
+            
+            if (apiEmployee != null)
+            {
+                if (!apiEmployee.IsEqual(employeeViewModel.MainEmployee))
+                {
+                    var result = DialogService.ShowDialog("Select Okay to continue editing, Cancel to refresh the list", "Selected employee parameters already changed by someone else.", MessageBoxButton.OKCancel);
+                    if (result == DialogResult.OK)
+                    {
+                        await UpdateAsync(employeeViewModel);
+
+                    }
+                    else if (result == DialogResult.Cancel)
+                    {
+                        //Refresh the list with search parameters
+                        await SearchAsync();
+                    }
+                }
+            }
+        }
+
+        private async Task CreateNewEmployeeAsync(EmployeeViewModel employeeViewModel)
+        {
+            employeeViewModel.Update();
+            var newEmployee = employeeViewModel.MainEmployee;
+            var createdEmployee = await ApiService.CreateEmployeeAsync(newEmployee);
+
+            if (createdEmployee != null)
+            {
+                employeeViewModel.IsCreated = true;
+            }
+        }
+
 
         private async Task UpdateAsync(EmployeeViewModel employee)
         {
@@ -130,19 +161,22 @@ namespace EmployeeManagement.ViewModels
 
         private async void Delete(object parameter)
         {
-            if (parameter is EmployeeViewModel employeeViewModel)
-            {
-                await DeleteAsync(employeeViewModel);
+            if (!(parameter is EmployeeViewModel employeeViewModel))
+                return;
 
-            }
+            if (employeeViewModel.IsCreated)
+                await DeleteAsync(employeeViewModel);
+            else
+                Employees.Remove(employeeViewModel);
         }
-        private async Task DeleteAsync(EmployeeViewModel employee)
+
+        private async Task DeleteAsync(EmployeeViewModel employeeViewModel)
         {
-            var result = await ApiService.DeleteEmployeeAsync(employee.Id);
+            var result = await ApiService.DeleteEmployeeAsync(employeeViewModel.Id);
 
             if (result)
             {
-                Employees.Remove(employee);
+                Employees.Remove(employeeViewModel);
             }
         }
     }

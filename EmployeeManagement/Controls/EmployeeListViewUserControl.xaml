@@ -16,25 +16,28 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-
       
             <DataGrid ItemsSource="{Binding Employees}" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Width="*" MinWidth="200"  Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Email" Width="*" MinWidth="250"  Binding="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Gender" Width="*" MinWidth="75" Binding="{Binding Gender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridComboBoxColumn Header="Status" Width="*" MinWidth="100"  SelectedItemBinding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Status" Width="*" MinWidth="75" Binding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <!--<DataGridComboBoxColumn Header="Status" Width="*" MinWidth="100"  SelectedItemBinding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <DataGridComboBoxColumn.ElementStyle>
                             <Style TargetType="ComboBox">
                                 
                             </Style>
                         </DataGridComboBoxColumn.ElementStyle>
-                    </DataGridComboBoxColumn>
+                    </DataGridComboBoxColumn>-->
                 <DataGridTemplateColumn Header="Actions" Width="*" MinWidth="150" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                <Button Content="Update" Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" IsEnabled="{Binding IsChanged}" Margin="10,0,10,0"/>
+                                <Button Content="{Binding IsCreated, Converter={StaticResource CreateUpdateConverter}}"
+                                        Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        IsEnabled="{Binding IsChanged}" Margin="10,0,10,0"/>
                                 <Button Content="Delete" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" />
                                 </StackPanel>
                             </DataTemplate>

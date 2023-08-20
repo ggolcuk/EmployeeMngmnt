@@ -12,6 +12,7 @@ namespace EmployeeManagement.ViewModels
     public class EmployeeViewModel : ViewModel
     {
         private bool _isChanged;
+        private bool _isCreated;
         private readonly Employee _employee;
         private readonly Employee _originalEmployee;
 
@@ -79,11 +80,26 @@ namespace EmployeeManagement.ViewModels
             }
         }
 
-        public EmployeeViewModel(Employee employee)
+        public bool IsCreated
+        {
+            get { return _isCreated; }
+
+            set
+            {
+                if (_isCreated == value) return;
+
+                _isCreated = value;
+                OnPropertyChanged(nameof(IsCreated));
+
+            }
+        }
+
+        public EmployeeViewModel(Employee employee, bool isCreated = true)
         {
             _employee = employee;
             _originalEmployee = employee.Clone(); // Save a clone of the original employee
             _isChanged = false;
+            _isCreated = isCreated;
         }
 
         public bool IsChanged
