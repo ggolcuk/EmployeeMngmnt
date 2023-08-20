@@ -1,34 +1,36 @@
-﻿using Common.WPF.WPFUtilities;
+﻿using Common.Utilities.EnumUtilities;
+using Common.WPF.WPFUtilities;
 using EmployeeManagement.Models;
 using EmployeeManagement.Services;
+using EmployeeManagement.Views;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+
 
 namespace EmployeeManagement.ViewModels
 {
     public class ListViewViewModel : ViewModel
     {
         private readonly IApiService _apiService;
-        public ObservableCollection<int> PerPageOptions { get; } = new ObservableCollection<int>
-        {
-            5, 10, 25, 50, 100
-        };
 
         public ObservableCollection<EmployeeViewModel> Employees { get; }
         public SearchParametersViewModel SearchParametersVM { get; }
 
+        public IList<GenderType> AllGenderOptions { get; }
+        public IList<StatusType> AllStatusOptions { get; }
 
-        public ICommand RefreshCommand { get; }
-        public ICommand SearchCommand { get; }
-        public ICommand AddCommand { get; }
+
         public ICommand UpdateCommand { get; }
         public ICommand DeleteCommand { get; }
+        public ICommand ExportAllCommand { get; }
+        public ICommand ExportSearchCommand { get; }
         public IApiService ApiService
         {
             get { return _apiService; }
@@ -40,57 +42,112 @@ namespace EmployeeManagement.ViewModels
             _apiService = apiService ?? throw new ArgumentNullException(nameof(ApiService));
             Employees = new ObservableCollection<EmployeeViewModel>();
 
-            SearchParametersVM = new SearchParametersViewModel(new SearchParameters());
+            SearchParametersVM = new SearchParametersViewModel(new SearchParameters(), this);
 
 
-            RefreshCommand = new DelegatingCommand(Refresh);
-            SearchCommand = new DelegatingCommand(Search);
-            AddCommand = new DelegatingCommand(Add);
             UpdateCommand = new DelegatingCommand(CreateOrUpdate);
             DeleteCommand = new DelegatingCommand(Delete);
 
-            Refresh(null);
+            ExportAllCommand = new DelegatingCommand(ExportAllToTxt);
+            ExportSearchCommand = new DelegatingCommand(ExportFilteredToTxt);
+
+            AllGenderOptions = new GenderType[] { GenderType.Female, GenderType.Male };
+            AllStatusOptions = new StatusType[] { StatusType.Active, StatusType.Inactive};
+
+            SearchParametersVM.Refresh(null);
+
         }
 
-
-        private async void Refresh(object parameter)
+        internal async void ExportAllToTxt(object parameter)
         {
-            this.SearchParametersVM.SetDefault();
-            await RefreshAsync();
-        }
-        private async Task RefreshAsync()
-        {
-            var employees = await ApiService.GetEmployeesAsync();
-            Employees.Clear();
-            foreach (var employee in employees)
-            {
-                Employees.Add(new EmployeeViewModel(employee));
-            }
+            var loadingMessageWindow = new LoadingMessageWindow();
+            loadingMessageWindow.Show(); // won't block the UI
+            await ExportEmployeesToTxTAsync(false);
+            loadingMessageWindow.Close();
         }
 
-
-        private async void Search(object parameter)
+        internal async void ExportFilteredToTxt(object parameter)
         {
-            await SearchAsync();
+            var loadingMessageWindow = new LoadingMessageWindow();
+            loadingMessageWindow.Show(); // won't block the UI
+
+            await ExportEmployeesToTxTAsync(true);
+
+            loadingMessageWindow.Close();
         }
 
-        private async Task SearchAsync()
+        public async Task ExportEmployeesToTxTAsync(bool useSearchParameters)
         {
-            List<Employee> searchResults = await ApiService.GetEmployeesAsync(SearchParametersVM.Instance);
 
-            // Update the employees collection
-            Employees.Clear();
-            foreach (var employee in searchResults)
-            {
-                Employees.Add(new EmployeeViewModel(employee));
-            }
-        }
-
-        private void Add()
-        {
-            var newEmployee = new EmployeeViewModel(new Employee()) { IsCreated = false };
-            Employees.Insert(0, newEmployee);
            
+            List<Employee> allEmployees = new List<Employee>();
+            int currentPage = 1;
+            int perPage = 100; // Adjust the perPage value as needed
+
+            while (true)
+            {
+                var tempSearchParameters = useSearchParameters ? SearchParametersVM.Instance.Clone() : new SearchParameters { page = currentPage, perPage = perPage };
+                tempSearchParameters.page = currentPage;
+                tempSearchParameters.perPage = perPage;
+
+               
+                var employees = await ApiService.GetEmployeesAsync(tempSearchParameters);
+
+                if (employees == null || employees.Count == 0)
+                {
+                    break;
+                }
+
+                allEmployees.AddRange(employees);
+                currentPage++;
+            }
+
+            if (allEmployees.Count > 0)
+            {
+                // Call method to save employees to TXT file
+                SaveEmployeesToTxt(allEmployees);
+            }
+        }
+
+        private void SaveEmployeesToTxt(List<Employee> employees)
+        {
+            if (employees == null || employees.Count == 0)
+            {
+                MessageBox.Show("No data to print.");
+                return;
+            }
+                
+
+            // Create a SaveFileDialog to allow the user to choose the file location
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*",
+                Title = "Save Employees to Text File",
+                FileName = "EmployeeData.txt"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                using (var writer = new StreamWriter(saveFileDialog.FileName))
+                {
+                    // Write the property names as the first line
+                    var propertyNames = typeof(Employee).GetProperties().Select(property => property.Name);
+                    writer.WriteLine(string.Join("\t", propertyNames));
+
+                    // Write employee data
+                    foreach (var employee in employees)
+                    {
+                        var values = typeof(Employee).GetProperties().Select(property =>
+                        {
+                            var value = property.GetValue(employee);
+                            return value != null ? value.ToString() : string.Empty;
+                        });
+                        writer.WriteLine(string.Join("\t", values));
+                    }
+                }
+
+                MessageBox.Show("Employees data saved to the text file.");
+            }
         }
 
         private async void CreateOrUpdate(object parameter)
@@ -125,7 +182,7 @@ namespace EmployeeManagement.ViewModels
                     else if (result == DialogResult.Cancel)
                     {
                         //Refresh the list with search parameters
-                        await SearchAsync();
+                        await SearchParametersVM.SearchAsync();
                     }
                 }
             }

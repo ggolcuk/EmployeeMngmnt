@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\BUTTON_EXPORT.png" />
+    <None Remove="Resources\BUTTON_REFRESH.PNG" />
+    <None Remove="Resources\BUTTON_RUN.png" />
+    <None Remove="Resources\BUTTON_SAVE.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\BUTTON_EXPORT.png" />
+    <Resource Include="Resources\BUTTON_RUN.png" />
+    <Resource Include="Resources\BUTTON_SAVE.png" />
+  </ItemGroup>
+
+</Project>

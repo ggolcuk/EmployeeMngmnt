@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:EmployeeManagement.Controls"
              xmlns:viewModels="clr-namespace:EmployeeManagement.ViewModels"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance Type=viewModels:ListViewViewModel, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance Type=viewModels:SearchParametersViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="75" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -23,54 +23,61 @@
             <ColumnDefinition Width="75"></ColumnDefinition>
             <ColumnDefinition Width="75"></ColumnDefinition>
             <ColumnDefinition Width="25*"></ColumnDefinition>
-            <ColumnDefinition Width="25*"></ColumnDefinition>
-            <ColumnDefinition  Width="27*"></ColumnDefinition>
-            <ColumnDefinition  Width="27*"></ColumnDefinition>
-            <ColumnDefinition  Width="27*"></ColumnDefinition>
+            <ColumnDefinition Width="50*"></ColumnDefinition>
+            <ColumnDefinition  Width="30*"></ColumnDefinition>
+            <ColumnDefinition  Width="30*"></ColumnDefinition>
+            <ColumnDefinition  Width="30*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        
-        
+
+
         <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="0">
-            <TextBlock Margin="5,2" Text="Search by name..." VerticalAlignment="Stretch"
-             Foreground="{StaticResource brushWatermarkForeground}"
+            <TextBlock Margin="5,2" Text="Search by name..." VerticalAlignment="Stretch" 
+             Foreground="{StaticResource brushWatermarkForeground}" Style="{StaticResource TextBlockStyle}"
              Visibility="{Binding ElementName=searchNameEntry, Path=Text.IsEmpty,
                           Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <TextBox Margin="5,2" Grid.Column="0" Text="{Binding SearchParametersVM.Name, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+            <TextBox Margin="5,2" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
         Name="searchNameEntry" VerticalAlignment="Stretch" Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
         </Grid>
 
         <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="1" Width="200">
             <TextBlock Margin="5,2" Text="Search by mail..."
-              Foreground="{StaticResource brushWatermarkForeground}"
+              Foreground="{StaticResource brushWatermarkForeground}" Style="{StaticResource TextBlockStyle}"
               Visibility="{Binding ElementName=searcMailEntry, Path=Text.IsEmpty,
-                   Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <TextBox Margin="5,2" Grid.Column="0" Text="{Binding SearchParametersVM.Email, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
-                Name="searcMailEntry"  Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+                   Converter={StaticResource BooleanToVisibilityConverter}}"  />
+            <TextBox Margin="5,2" Grid.Column="0" Text="{Binding Email, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+                Name="searcMailEntry" VerticalAlignment="Stretch" Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
         </Grid>
 
         <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="2">
-            <TextBlock Margin="5,2" Text="gender..."
-              Foreground="{StaticResource brushWatermarkForeground}"
-              Visibility="{Binding ElementName=searcGenderEntry, Path=Text.IsEmpty,
-                   Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <TextBox Margin="5,2" Grid.Column="0" Text="{Binding SearchParametersVM.Gender, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
-                Name="searcGenderEntry"  Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+            <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FilterGenderOptions, Mode=OneWay}" SelectedValue="{Binding SelectedGender}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="3">
-            <TextBlock Margin="5,2" Text="status..."
-              Foreground="{StaticResource brushWatermarkForeground}"
-              Visibility="{Binding ElementName=searcStatusEntry, Path=Text.IsEmpty,
-                   Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <TextBox Margin="5,2" Grid.Column="0" Text="{Binding SearchParametersVM.Status, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
-                Name="searcStatusEntry"  Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+            <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FilterStatusOptions, Mode=OneWay}" SelectedValue="{Binding SelectedStatus}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
-        <TextBox Margin="5,2" Grid.Column="4" Text="{Binding SearchParametersVM.Page, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+        <TextBox Margin="5,2" Grid.Column="4" Text="{Binding Page, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
        Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
 
-        <TextBox Margin="5,2" Grid.Column="5" Text="{Binding SearchParametersVM.Page, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
-       Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+        <ComboBox Style="{StaticResource ComboBoxStyle}"  Grid.Column="5" ItemsSource="{Binding PerPageOptions, Mode=OneWay}" SelectedValue="{Binding PerPage}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding }"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
         <Button Content="Search" Grid.Column="6" Command="{Binding SearchCommand}" Style="{StaticResource ButtonStyle}" CommandParameter="{Binding}" />
         <Button Content="Refresh" Grid.Column="7" Command="{Binding RefreshCommand}" Style="{StaticResource ButtonStyle}"/>

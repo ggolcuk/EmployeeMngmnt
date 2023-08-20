@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Common.Utilities.EnumUtilities;
+using EmployeeManagement.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +15,14 @@ namespace EmployeeManagement.Models
         public string email { get; set; }
         public string gender { get; set; }
         public string status { get; set; }
+
+        public Employee()
+        {
+            name= string.Empty;
+            email= string.Empty;
+            gender = EnumUtility.GetDescription(GenderType.Female);
+            status = EnumUtility.GetDescription(StatusType.Active);
+        }
 
 
         public Employee Clone()

@@ -1,12 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:converter="clr-namespace:Common.WPF.Converters"
-                    xmlns:utilities="clr-namespace:Common.WPF.UIUtilities"
+                    
                     >
 
 
     <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converter:CreateUpdateConverter x:Key="CreateUpdateConverter" />
+    <converter:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
 
     <SolidColorBrush x:Key="brushWatermarkBackground" Color="White" />
     <SolidColorBrush x:Key="brushWatermarkForeground" Color="LightSteelBlue" />
@@ -27,11 +28,15 @@
 
     <Style x:Key="TextBlockStyle" TargetType="TextBlock">        
         <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Height" Value="22"/>
     </Style>
 
 
     <Style x:Key="TextBoxValidated" TargetType="TextBox">
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Height" Value="22"/>
         <Style.Triggers>
             <Trigger Property="Validation.HasError" Value="True">
                 <Setter Property="ToolTip"
@@ -61,7 +66,14 @@
         </Style.Triggers>
     </Style>
 
-    
+    <Style x:Key="ComboBoxStyle" TargetType= "{x:Type ComboBox}">
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="BorderBrush" Value="DarkGray"/>
+        <Setter Property="Background" Value="White"/>
+    </Style>
+
+
     <Style x:Key="LabelStyle" TargetType="Label">
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
@@ -72,9 +84,10 @@
     </Style>
 
     <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="Margin" Value="5,1"/>
-        
-       
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Height" Value="22"/>
+
+
     </Style>
 
 

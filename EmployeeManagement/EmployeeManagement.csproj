@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.API\Common.API.csproj" />
+    <ProjectReference Include="..\Common.Images\Common.Images.csproj" />
+    <ProjectReference Include="..\Common.Utilities\Common.Utilities.csproj" />
     <ProjectReference Include="..\Common.WPF\Common.WPF.csproj" />
   </ItemGroup>
 

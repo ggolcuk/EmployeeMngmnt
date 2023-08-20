@@ -1,5 +1,7 @@
-﻿using Common.WPF.WPFUtilities;
+﻿using Common.Utilities.EnumUtilities;
+using Common.WPF.WPFUtilities;
 using EmployeeManagement.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,12 +11,42 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.ViewModels
 {
+    public enum StatusType
+    {
+        [Description("active")]
+        Active = 0,
+
+        [Description("inactive")]
+        Inactive = 1,
+
+        [Description("")]
+        All = 2
+    }
+
+    public enum GenderType
+    {
+        [Description("male")]
+        Male,
+
+        [Description("female")]
+        Female,
+        
+        [Description("")]
+        All
+    }
+
+
+
+
     public class EmployeeViewModel : ViewModel
     {
         private bool _isChanged;
         private bool _isCreated;
         private readonly Employee _employee;
         private readonly Employee _originalEmployee;
+        private GenderType _selectedGender;
+        private StatusType _selectedStatus;
+
 
         public Employee MainEmployee
         {
@@ -49,8 +81,39 @@ namespace EmployeeManagement.ViewModels
 
                 _employee.gender = value;
                 OnPropertyChanged(nameof(Gender));
-                
             }
+        }
+
+        public GenderType SelectedGender
+        {
+            get { return _selectedGender;  }
+            set
+            {
+                var gender = EnumUtility.GetDescription(value);
+                if (_selectedGender == value) return;
+                _employee.gender = gender;
+                _selectedGender = value;
+                OnPropertyChanged(nameof(SelectedGender));
+                OnPropertyChanged(nameof(Gender));
+
+            }
+
+        }
+
+        public StatusType SelectedStatus
+        {
+            get { return _selectedStatus; }
+            set
+            {
+                var status = EnumUtility.GetDescription(value);
+                if (_selectedStatus == value) return;
+                _employee.status = status;
+                _selectedStatus = value;
+                OnPropertyChanged(nameof(SelectedStatus));
+                OnPropertyChanged(nameof(Status));
+
+            }
+
         }
 
         public string Email
@@ -100,6 +163,10 @@ namespace EmployeeManagement.ViewModels
             _originalEmployee = employee.Clone(); // Save a clone of the original employee
             _isChanged = false;
             _isCreated = isCreated;
+
+            SelectedStatus = (StatusType)EnumUtility.FromDescription(_employee.status, typeof(StatusType));
+            SelectedGender = (GenderType)EnumUtility.FromDescription(_employee.gender, typeof(GenderType));
+
         }
 
         public bool IsChanged
@@ -140,6 +207,9 @@ namespace EmployeeManagement.ViewModels
 
             OnPropertyChanged(nameof(IsChanged));
         }
+
+
+
     }
 
 }

@@ -26,5 +26,20 @@ namespace EmployeeManagement.Models
             page = 1;
             perPage = 10;
         }
+
+        internal SearchParameters Clone()
+        {
+            return new SearchParameters
+            {
+                name = this.name,
+                email = this.email,
+                gender = this.gender,
+                status = this.status,
+                page = this.page,
+                perPage = this.perPage
+            };
+
+        
+        }
     }
 }

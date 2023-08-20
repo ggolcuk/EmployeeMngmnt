@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                       xmlns:viewModels="clr-namespace:EmployeeManagement.ViewModels"
          mc:Ignorable="d" 
-         d:DataContext="{d:DesignInstance Type=viewModels:EmployeeViewModel, IsDesignTimeCreatable=True}"
+         d:DataContext="{d:DesignInstance Type=viewModels:ListViewViewModel, IsDesignTimeCreatable=True}"
          d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
@@ -15,36 +15,58 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-      
-            <DataGrid ItemsSource="{Binding Employees}" AutoGenerateColumns="False">
+    <Grid HorizontalAlignment="Stretch" Height="450" Width="Auto">
+
+        <DataGrid ItemsSource="{Binding Employees}" AutoGenerateColumns="False"  >
                 <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Width="*" MinWidth="200"  Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Email" Width="*" MinWidth="250"  Binding="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Gender" Width="*" MinWidth="75" Binding="{Binding Gender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Status" Width="*" MinWidth="75" Binding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <!--<DataGridComboBoxColumn Header="Status" Width="*" MinWidth="100"  SelectedItemBinding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <DataGridComboBoxColumn.ElementStyle>
-                            <Style TargetType="ComboBox">
-                                
-                            </Style>
-                        </DataGridComboBoxColumn.ElementStyle>
-                    </DataGridComboBoxColumn>-->
-                <DataGridTemplateColumn Header="Actions" Width="*" MinWidth="150" >
+                    <DataGridTextColumn Header="Name" Width="*" MinWidth="200"  Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Email" Width="*" MinWidth="250"  Binding="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTemplateColumn Header="Gender" Width="*" MinWidth="75">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding DataContext.AllGenderOptions, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}" SelectedValue="{Binding SelectedGender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--<DataGridTextColumn Header="Status" Width="*" MinWidth="75" Binding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
+
+                    <DataGridTemplateColumn Header="Status" Width="*" MinWidth="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding DataContext.AllStatusOptions, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}" SelectedValue="{Binding SelectedStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Actions" Width="*" MinWidth="150" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                <Button Content="{Binding IsCreated, Converter={StaticResource CreateUpdateConverter}}"
+                                    <Button Content="{Binding IsCreated, Converter={StaticResource CreateUpdateConverter}}"
                                         Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
+                                        CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}"
                                         IsEnabled="{Binding IsChanged}" Margin="10,0,10,0"/>
-                                <Button Content="Delete" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" />
+                                    <Button Content="Delete" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                            CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+       
 
-        </Grid>
+    </Grid>
 </UserControl>

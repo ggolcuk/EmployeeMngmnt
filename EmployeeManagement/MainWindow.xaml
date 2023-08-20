@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:EmployeeManagement"
         xmlns:views="clr-namespace:EmployeeManagement.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"  MinWidth="600" MinHeight="300" Width="800" Height="650">
     <Grid>
         <Grid>
             <views:MainView></views:MainView>
