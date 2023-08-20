@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Common.API.ApiUtilities;
 using EmployeeManagement.Models;
 using Newtonsoft.Json;
+using Common.API.ApiUtilities;
 
 namespace EmployeeManagement.Services
 {
@@ -28,23 +26,23 @@ namespace EmployeeManagement.Services
         // Retrieve a list of employees based on parameters
         public async Task<List<Employee>> GetEmployeesAsync(SearchParameters searchParameters)
         {
-            string apiUrl = $"users?page={searchParameters.Page}&per_page={searchParameters.PerPage}";
+            string apiUrl = $"users?page={searchParameters.page}&per_page={searchParameters.perPage}";
 
-            if (!string.IsNullOrEmpty(searchParameters.Name))
+            if (!string.IsNullOrEmpty(searchParameters.name))
             {
-                apiUrl += $"&name={Uri.EscapeDataString(searchParameters.Name)}";
+                apiUrl += $"&name={Uri.EscapeDataString(searchParameters.name)}";
             }
-            if (!string.IsNullOrEmpty(searchParameters.Email))
+            if (!string.IsNullOrEmpty(searchParameters.email))
             {
-                apiUrl += $"&email={Uri.EscapeDataString(searchParameters.Email)}";
+                apiUrl += $"&email={Uri.EscapeDataString(searchParameters.email)}";
             }
-            if (!string.IsNullOrEmpty(searchParameters.Gender))
+            if (!string.IsNullOrEmpty(searchParameters.gender))
             {
-                apiUrl += $"&gender={Uri.EscapeDataString(searchParameters.Gender)}";
+                apiUrl += $"&gender={Uri.EscapeDataString(searchParameters.gender)}";
             }
-            if (!string.IsNullOrEmpty(searchParameters.Status))
+            if (!string.IsNullOrEmpty(searchParameters.status))
             {
-                apiUrl += $"&status={Uri.EscapeDataString(searchParameters.Status)}";
+                apiUrl += $"&status={Uri.EscapeDataString(searchParameters.status)}";
             }
 
             return await ApiUtilities.HandleApiCallAsync<List<Employee>>(

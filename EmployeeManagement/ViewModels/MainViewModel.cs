@@ -62,7 +62,7 @@ namespace EmployeeManagement.ViewModels
                 name = "New Employee",
                 email = "newemployee@example.com",
                 gender = "Male",
-                Status = "Active"
+                status = "Active"
             };
 
            // await CreateEmployeeAsync(newEmployee);

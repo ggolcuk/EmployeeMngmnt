@@ -9,22 +9,22 @@ namespace EmployeeManagement.Models
 {
     public class SearchParameters
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Gender { get; set; }
-        public string Status { get; set; }
-        public int Page { get; set; } = 1;
-        public int PerPage { get; set; } = 10;
+        public string name { get; set; }
+        public string email { get; set; }
+        public string gender { get; set; }
+        public string status { get; set; }
+        public int page { get; set; } = 1;
+        public int perPage { get; set; } = 10;
 
 
         public void SetDefault()
         {
-            Name = string.Empty;
-            Email = string.Empty;
-            Gender = string.Empty; 
-            Status = string.Empty;
-            Page = 1;
-            PerPage = 10;
+            name = string.Empty;
+            email = string.Empty;
+            gender = string.Empty; 
+            status = string.Empty;
+            page = 1;
+            perPage = 10;
         }
     }
 }
