@@ -67,6 +67,20 @@ namespace EmployeeManagement.ViewModels
             }
         }
 
+        public int Page
+        {
+            get { return _searchParameters.page; }
+
+            set
+            {
+                if (_searchParameters.page == value) return;
+
+                _searchParameters.page = value;
+                OnPropertyChanged(nameof(Page));
+
+            }
+        }
+
         public SearchParametersViewModel(SearchParameters sp)
         {
             _searchParameters = sp;

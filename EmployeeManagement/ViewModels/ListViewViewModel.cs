@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace EmployeeManagement.ViewModels
@@ -92,12 +93,21 @@ namespace EmployeeManagement.ViewModels
 
         private async void Update(object parameter)
         {
-
-            //Can update ? 
-
-
             if (parameter is EmployeeViewModel employeeViewModel)
             {
+                //Check if the Employee is changes by someone else
+                var apiemployee = await ApiService.GetEmployeeAsync(employeeViewModel.Id);
+
+                if (apiemployee != null)
+                {
+                    if (!apiemployee.IsEqual(employeeViewModel.MainEmployee))
+                    {
+                        var result = DialogService.ShowDialog($"Selected employee parameters already changed by someone else.", "Select Okay to continue editing, Cancel to refresh the list", MessageBoxButton.OKCancel);
+
+                    }
+                }
+
+
                 await UpdateAsync(employeeViewModel);
 
             }

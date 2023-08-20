@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="EmployeeManagement.Controls.ToolSetUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EmployeeManagement.Controls"
+             xmlns:viewModels="clr-namespace:EmployeeManagement.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModels:ListViewViewModel, IsDesignTimeCreatable=True}"
+             d:DesignHeight="75" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Common.WPF;component/Resources/Templates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180"></ColumnDefinition>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="75"></ColumnDefinition>
+            <ColumnDefinition Width="75"></ColumnDefinition>
+            <ColumnDefinition Width="25*"></ColumnDefinition>
+            <ColumnDefinition Width="25*"></ColumnDefinition>
+            <ColumnDefinition  Width="27*"></ColumnDefinition>
+            <ColumnDefinition  Width="27*"></ColumnDefinition>
+            <ColumnDefinition  Width="27*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        
+        <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="0">
+            <TextBlock Margin="5,2" Text="Search by name..." VerticalAlignment="Stretch"
+             Foreground="{StaticResource brushWatermarkForeground}"
+             Visibility="{Binding ElementName=searchNameEntry, Path=Text.IsEmpty,
+                          Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <TextBox Margin="5,2" Grid.Column="0" Text="{Binding SearchParametersVM.Name, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+        Name="searchNameEntry" VerticalAlignment="Stretch" Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+        </Grid>
+
+        <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="1" Width="200">
+            <TextBlock Margin="5,2" Text="Search by mail..."
+              Foreground="{StaticResource brushWatermarkForeground}"
+              Visibility="{Binding ElementName=searcMailEntry, Path=Text.IsEmpty,
+                   Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <TextBox Margin="5,2" Grid.Column="0" Text="{Binding SearchParametersVM.Email, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+                Name="searcMailEntry"  Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+        </Grid>
+
+        <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="2">
+            <TextBlock Margin="5,2" Text="gender..."
+              Foreground="{StaticResource brushWatermarkForeground}"
+              Visibility="{Binding ElementName=searcGenderEntry, Path=Text.IsEmpty,
+                   Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <TextBox Margin="5,2" Grid.Column="0" Text="{Binding SearchParametersVM.Gender, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+                Name="searcGenderEntry"  Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+        </Grid>
+
+        <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="3">
+            <TextBlock Margin="5,2" Text="status..."
+              Foreground="{StaticResource brushWatermarkForeground}"
+              Visibility="{Binding ElementName=searcStatusEntry, Path=Text.IsEmpty,
+                   Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <TextBox Margin="5,2" Grid.Column="0" Text="{Binding SearchParametersVM.Status, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+                Name="searcStatusEntry"  Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+        </Grid>
+
+        <TextBox Margin="5,2" Grid.Column="4" Text="{Binding SearchParametersVM.Page, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+       Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+
+        <TextBox Margin="5,2" Grid.Column="5" Text="{Binding SearchParametersVM.Page, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+       Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+
+        <Button Content="Search" Grid.Column="6" Command="{Binding SearchCommand}" Style="{StaticResource ButtonStyle}" CommandParameter="{Binding}" />
+        <Button Content="Refresh" Grid.Column="7" Command="{Binding RefreshCommand}" Style="{StaticResource ButtonStyle}"/>
+        <Button Content="Create" Grid.Column="8" Command="{Binding AddCommand}" Style="{StaticResource ButtonStyle}" />
+
+
+
+
+
+
+
+
+    </Grid>
+</UserControl>

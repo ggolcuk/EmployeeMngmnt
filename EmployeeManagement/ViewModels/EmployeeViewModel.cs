@@ -111,6 +111,7 @@ namespace EmployeeManagement.ViewModels
             Email = _originalEmployee.email;
             Status = _originalEmployee.status;
             Gender = _originalEmployee.gender;
+            OnPropertyChanged(nameof(IsChanged));
 
         }
 
@@ -120,6 +121,8 @@ namespace EmployeeManagement.ViewModels
             _originalEmployee.email = Email;
             _originalEmployee.status = Status;
             _originalEmployee.gender = Gender;
+
+            OnPropertyChanged(nameof(IsChanged));
         }
     }
 

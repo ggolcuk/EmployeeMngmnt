@@ -27,10 +27,12 @@
             <RowDefinition Height ="30"></RowDefinition>
         </Grid.RowDefinitions>
 
+        <TabControl>
+            <TabItem Header="List View">
 
-        <Expander  Grid.Row="0" Header=" " IsExpanded="True">
-            <controls:UserListView DataContext="{Binding .}" />
-        </Expander>
+                <controls:UserListView DataContext="{Binding EmployeesListViewModel}" />
+            </TabItem>
+        </TabControl>
 
 
        

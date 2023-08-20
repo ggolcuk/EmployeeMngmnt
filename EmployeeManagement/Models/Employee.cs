@@ -12,7 +12,7 @@ namespace EmployeeManagement.Models
         public string name { get; set; }
         public string email { get; set; }
         public string gender { get; set; }
-        public string status { get; set; }
+        public string Status { get; set; }
 
 
         public Employee Clone()
@@ -23,7 +23,7 @@ namespace EmployeeManagement.Models
                 name = this.name,
                 email = this.email,
                 gender = this.gender,
-                status = this.status,
+                Status = this.Status,
          
             };
         }
@@ -34,7 +34,7 @@ namespace EmployeeManagement.Models
                    this.name == other.name &&
                    this.email == other.email &&
                    this.gender == other.gender &&
-                   this.status == other.status;
+                   this.Status == other.Status;
         }
     }
 }

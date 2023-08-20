@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.WPF", "Common.WPF\Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagement.Tests", "EmployeeManagement.Tests\EmployeeManagement.Tests.csproj", "{2C4AF524-2509-4ACA-AAF3-453269459DA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.API", "Common.API\Common.API.csproj", "{CDA58666-3A35-4C76-8EE5-9ABE424CD50D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.API", "Common.API\Common.API.csproj", "{CDA58666-3A35-4C76-8EE5-9ABE424CD50D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Utilities", "Common.Utilities\Common.Utilities.csproj", "{BB471302-DF6B-4A6E-8D17-3A486EC5D886}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{CDA58666-3A35-4C76-8EE5-9ABE424CD50D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDA58666-3A35-4C76-8EE5-9ABE424CD50D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDA58666-3A35-4C76-8EE5-9ABE424CD50D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB471302-DF6B-4A6E-8D17-3A486EC5D886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB471302-DF6B-4A6E-8D17-3A486EC5D886}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB471302-DF6B-4A6E-8D17-3A486EC5D886}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB471302-DF6B-4A6E-8D17-3A486EC5D886}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

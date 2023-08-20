@@ -10,6 +10,10 @@
     <Folder Include="UIUtilities\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Utilities\Common.Utilities.csproj" />
+  </ItemGroup>
+
 
 
 </Project>

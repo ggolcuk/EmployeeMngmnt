@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace EmployeeManagement.Controls
 {
     /// <summary>
-    /// Interaction logic for EmployeeDetailsControl.xaml
+    /// Interaction logic for EmployeeListViewUserControl.xaml
     /// </summary>
-    public partial class EmployeeDetailsControl : UserControl
+    public partial class EmployeeListViewUserControl : UserControl
     {
-        public EmployeeDetailsControl()
+        public EmployeeListViewUserControl()
         {
             InitializeComponent();
         }

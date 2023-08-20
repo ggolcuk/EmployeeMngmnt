@@ -21,8 +21,8 @@ public class ApiServiceTests
                           
                             new List<Employee>
                               {
-                                   new Employee { id = 1, name = "John", email = "john@example.com", gender = "Male", status = "Active" },
-                                   new Employee { id = 2, name = "Jane", email = "jane@example.com", gender = "Female", status = "Active" }
+                                   new Employee { id = 1, name = "John", email = "john@example.com", gender = "Male", Status = "Active" },
+                                   new Employee { id = 2, name = "Jane", email = "jane@example.com", gender = "Female", Status = "Active" }
                               }
                           ))
                       });
@@ -49,7 +49,7 @@ public class ApiServiceTests
                           Content = new StringContent(JsonConvert.SerializeObject(
                           
                          
-                                  new Employee { id = 1, name = "John", email = "john@example.com", gender = "Male", status = "Active" }
+                                  new Employee { id = 1, name = "John", email = "john@example.com", gender = "Male", Status = "Active" }
                               
                           ))
                       });
@@ -77,8 +77,8 @@ public class ApiServiceTests
                           
                                new List<Employee>
                               {
-                              new Employee { id = 1, name = "John", email = "john@example.com", gender = "Male", status = "Active" },
-                              new Employee { id = 2, name = "Jane", email = "jane@example.com", gender = "Female", status = "Active" }
+                              new Employee { id = 1, name = "John", email = "john@example.com", gender = "Male", Status = "Active" },
+                              new Employee { id = 2, name = "Jane", email = "jane@example.com", gender = "Female", Status = "Active" }
                               }
                           ))
                       });
@@ -99,7 +99,7 @@ public class ApiServiceTests
     {
         // Arrange
         var mockHttpClient = new Mock<IHttpClient>();
-        var newEmployee = new Employee { id = 3, name = "Alice", email = "alice@example.com", gender = "Female", status = "Active" };
+        var newEmployee = new Employee { id = 3, name = "Alice", email = "alice@example.com", gender = "Female", Status = "Active" };
         mockHttpClient.Setup(client => client.PostAsync(It.IsAny<string>(), It.IsAny<HttpContent>()))
                       .ReturnsAsync(new HttpResponseMessage
                       {
