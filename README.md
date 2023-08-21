@@ -1,7 +1,5 @@
 # WPF .NET Project: Employee Management
 
-![Project Logo](placeholder_image_url)
-
 ## Table of Contents
 
 - [Introduction](#introduction)
