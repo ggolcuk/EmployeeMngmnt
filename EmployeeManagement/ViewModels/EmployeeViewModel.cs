@@ -76,6 +76,7 @@ namespace EmployeeManagement.ViewModels
 
                 _employee.name = value;
                 OnPropertyChanged(nameof(Name));
+                OnPropertyChanged(nameof(CanUpdated));
                 
             }
         }
@@ -89,6 +90,7 @@ namespace EmployeeManagement.ViewModels
 
                 _employee.gender = value;
                 OnPropertyChanged(nameof(Gender));
+                OnPropertyChanged(nameof(CanUpdated));
             }
         }
 
@@ -103,6 +105,7 @@ namespace EmployeeManagement.ViewModels
                 _selectedGender = value;
                 OnPropertyChanged(nameof(SelectedGender));
                 OnPropertyChanged(nameof(Gender));
+                OnPropertyChanged(nameof(CanUpdated));
 
             }
 
@@ -119,6 +122,7 @@ namespace EmployeeManagement.ViewModels
                 _selectedStatus = value;
                 OnPropertyChanged(nameof(SelectedStatus));
                 OnPropertyChanged(nameof(Status));
+                OnPropertyChanged(nameof(CanUpdated));
 
             }
 
@@ -133,6 +137,7 @@ namespace EmployeeManagement.ViewModels
 
                 _employee.email = value;
                 OnPropertyChanged(nameof(Email));
+                OnPropertyChanged(nameof(CanUpdated));
                
             }
         }
@@ -147,6 +152,8 @@ namespace EmployeeManagement.ViewModels
 
                 _employee.status = value;
                 OnPropertyChanged(nameof(Status));
+                OnPropertyChanged(nameof(CanUpdated));
+
                 
             }
         }

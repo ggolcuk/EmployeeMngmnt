@@ -1,8 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:converter="clr-namespace:Common.WPF.Converters"
-                    
-                    >
+                    xmlns:uiUtilities="clr-namespace:Common.WPF.UIUtilities">
 
 
     <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -77,6 +76,7 @@
         </Setter>
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="uiUtilities:PopupFocusBehavior.IsPopupOpenOnFocus" Value="True" />
     </Style>
 
     <Style x:Key="TextBoxSelected" TargetType="TextBox" BasedOn="{StaticResource TextBoxValidated}">
