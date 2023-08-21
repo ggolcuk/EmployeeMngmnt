@@ -15,7 +15,7 @@
 
 ## Introduction
 
-This WPF .NET project is designed to manage employee data using the [GoRest API](https://gorest.co.in/). It allows you to search for employees based on various parameters, view them in a user-friendly interface, and export employee data to a txt file.
+This WPF .NET project is designed to manage employee data using the [GoRest API](https://gorest.co.in/). It allows you to search for employees based on various parameters, view them in a user-friendly interface, and export employee data to a csv file.
 
 ## Prerequisites
 
