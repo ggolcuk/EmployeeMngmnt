@@ -171,7 +171,7 @@ namespace EmployeeManagement.ViewModels
             
             if (apiEmployee != null)
             {
-                if (!apiEmployee.IsEqual(employeeViewModel.MainEmployee))
+                if (!apiEmployee.IsEqual(employeeViewModel.OriginalEmployee))
                 {
                     var result = DialogService.ShowDialog("Select Okay to continue editing, Cancel to refresh the list", "Selected employee parameters already changed by someone else.", MessageBoxButton.OKCancel);
                     if (result == DialogResult.OK)
@@ -186,6 +186,8 @@ namespace EmployeeManagement.ViewModels
                     }
                 }
             }
+
+            await UpdateAsync(employeeViewModel);
         }
 
         private async Task CreateNewEmployeeAsync(EmployeeViewModel employeeViewModel)

@@ -17,10 +17,27 @@
     </UserControl.Resources>
     <Grid HorizontalAlignment="Stretch" Height="450" Width="Auto">
 
-        <DataGrid ItemsSource="{Binding Employees}" AutoGenerateColumns="False"  >
+        <DataGrid ItemsSource="{Binding Employees,ValidatesOnDataErrors=True }" AutoGenerateColumns="False"  >
+            
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Width="*" MinWidth="200"  Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn Header="Email" Width="*" MinWidth="250"  Binding="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Name" Width="*" MinWidth="200"  Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True}">
+                    <DataGridTextColumn.ElementStyle>
+                        <StaticResource ResourceKey="TextBlockElementStyle" />
+                    </DataGridTextColumn.ElementStyle>
+                    <DataGridTextColumn.EditingElementStyle>
+                        <StaticResource ResourceKey="TextBoxEditingElementStyle" />
+                    </DataGridTextColumn.EditingElementStyle>
+                </DataGridTextColumn>
+                    
+                <DataGridTextColumn Header="Email" Width="*" MinWidth="250"  Binding="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True}" >
+                    <DataGridTextColumn.ElementStyle>
+                        <StaticResource ResourceKey="TextBlockElementStyle" />
+                    </DataGridTextColumn.ElementStyle>
+                    <DataGridTextColumn.EditingElementStyle>
+                        <StaticResource ResourceKey="TextBoxEditingElementStyle" />
+                    </DataGridTextColumn.EditingElementStyle>
+                </DataGridTextColumn>
+                    
                 <DataGridTemplateColumn Header="Gender" Width="*" MinWidth="75">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -57,10 +74,13 @@
                                     <Button Content="{Binding IsCreated, Converter={StaticResource CreateUpdateConverter}}"
                                         Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}"
-                                        IsEnabled="{Binding IsChanged}" Margin="10,0,10,0"/>
-                                    <Button Content="Delete" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                            CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}" />
-                                </StackPanel>
+                                        IsEnabled="{Binding CanUpdated}" Margin="10,0,10,0"/>
+                                    
+                                    <Button x:Name="DeleteButton" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"  ToolTip="Delete employee" Style="{StaticResource ImageButton}" HorizontalAlignment="Left"  CommandParameter="{Binding}">
+                                        <Image Source="pack://application:,,,/Common.Images;component/Resources/BUTTON_DELETE.PNG" Stretch="None"/>
+                                </Button>
+
+                            </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

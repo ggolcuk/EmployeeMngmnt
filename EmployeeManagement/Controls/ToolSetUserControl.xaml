@@ -24,8 +24,8 @@
             <ColumnDefinition Width="75"></ColumnDefinition>
             <ColumnDefinition Width="25*"></ColumnDefinition>
             <ColumnDefinition Width="50*"></ColumnDefinition>
-            <ColumnDefinition  Width="30*"></ColumnDefinition>
-            <ColumnDefinition  Width="30*"></ColumnDefinition>
+            <ColumnDefinition  Width="20*"></ColumnDefinition>
+            <ColumnDefinition  Width="20*"></ColumnDefinition>
             <ColumnDefinition  Width="30*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
@@ -49,7 +49,8 @@
         </Grid>
 
         <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="2">
-            <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FilterGenderOptions, Mode=OneWay}" SelectedValue="{Binding SelectedGender}">
+            <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FilterGenderOptions, Mode=OneWay}" SelectedValue="{Binding SelectedGender}"
+                       ToolTip="Filter by gender">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
@@ -59,7 +60,8 @@
         </Grid>
 
         <Grid Background="{StaticResource brushWatermarkBackground}" Grid.Column="3">
-            <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FilterStatusOptions, Mode=OneWay}" SelectedValue="{Binding SelectedStatus}">
+            <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FilterStatusOptions, Mode=OneWay}" SelectedValue="{Binding SelectedStatus}"
+                       ToolTip="Filter by status">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
@@ -69,9 +71,10 @@
         </Grid>
 
         <TextBox Margin="5,2" Grid.Column="4" Text="{Binding Page, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
-       Style="{StaticResource TextBoxValidated}" Background="Transparent"  />
+       Style="{StaticResource TextBoxValidated}"  ToolTip="Result page" Background="Transparent"  />
 
-        <ComboBox Style="{StaticResource ComboBoxStyle}"  Grid.Column="5" ItemsSource="{Binding PerPageOptions, Mode=OneWay}" SelectedValue="{Binding PerPage}">
+        <ComboBox Style="{StaticResource ComboBoxStyle}"  Grid.Column="5" ItemsSource="{Binding PerPageOptions, Mode=OneWay}" SelectedValue="{Binding PerPage}"
+                  ToolTip="Results per page">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding }"/>
@@ -79,9 +82,16 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <Button Content="Search" Grid.Column="6" Command="{Binding SearchCommand}" Style="{StaticResource ButtonStyle}" CommandParameter="{Binding}" />
-        <Button Content="Refresh" Grid.Column="7" Command="{Binding RefreshCommand}" Style="{StaticResource ButtonStyle}"/>
-        <Button Content="Create" Grid.Column="8" Command="{Binding AddCommand}" Style="{StaticResource ButtonStyle}" />
+        
+        <Button x:Name="SearchButton" Grid.Column="6"  Command="{Binding SearchCommand}" Margin="3"  ToolTip="Filter the result based on the selections" Style="{StaticResource ImageButton}" HorizontalAlignment="Left"  CommandParameter="{Binding}">
+            <Image Source="pack://application:,,,/Common.Images;component/Resources/BUTTON_SEARCH.PNG" Stretch="None"/>
+        </Button>
+
+        <Button x:Name="RefreshButton" Grid.Column="7" Command="{Binding RefreshCommand}"  ToolTip="Refresh the UI to default saerch parameters" Style="{StaticResource ImageButton}" HorizontalAlignment="Left"  CommandParameter="{Binding}">
+            <Image Source="pack://application:,,,/Common.Images;component/Resources/BUTTON_REFRESH.png" Stretch="None"/>
+        </Button>
+
+        <Button Content="Create" Grid.Column="8" Command="{Binding AddCommand}"  ToolTip="Create new Employee" Style="{StaticResource ButtonStyle}" />
 
 
 

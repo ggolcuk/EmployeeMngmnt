@@ -1,4 +1,5 @@
 ﻿using Common.Utilities.EnumUtilities;
+using Common.WPF.ErrorUtilities;
 using Common.WPF.WPFUtilities;
 using EmployeeManagement.Models;
 using Newtonsoft.Json.Linq;
@@ -8,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Automation.Peers;
 
 namespace EmployeeManagement.ViewModels
 {
@@ -42,15 +44,21 @@ namespace EmployeeManagement.ViewModels
     {
         private bool _isChanged;
         private bool _isCreated;
+        
         private readonly Employee _employee;
         private readonly Employee _originalEmployee;
         private GenderType _selectedGender;
         private StatusType _selectedStatus;
 
-
+        
         public Employee MainEmployee
         {
             get { return _employee; }
+        }
+
+        public Employee OriginalEmployee
+        {
+            get { return _originalEmployee; }
         }
 
         public int Id
@@ -177,7 +185,17 @@ namespace EmployeeManagement.ViewModels
                 if (_isChanged == value) return;
                 _isChanged = value;
                 OnPropertyChanged(nameof(IsChanged));
+                OnPropertyChanged(nameof(CanUpdated));
             }
+        }
+
+        public bool CanUpdated
+        {
+            get {
+               var isValid = IsValid();
+                return (IsChanged && isValid); 
+                }
+
         }
 
 
@@ -207,6 +225,42 @@ namespace EmployeeManagement.ViewModels
 
             OnPropertyChanged(nameof(IsChanged));
         }
+
+
+        #region UI Validation
+        private readonly string[] propertiesToValidate = new[] { nameof(Name), nameof(Email) };
+
+        public bool IsValid()
+        {
+            return string.IsNullOrEmpty(GetErrors());
+
+        }
+        private string GetErrors()
+        {
+            List<string> errors = new List<string>();
+
+            errors.AddRange(propertiesToValidate.Select(GetValidationError).NotNull());
+
+            if (errors.Count != 0)
+                return errors.ToError();
+            return null;
+
+        }
+
+        public override string GetValidationError(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case nameof(Name):
+                    return ErrorManagement.ErrorManagement.ValidateEmployeeName(Name);
+                case nameof(Email):
+                    return ErrorManagement.ErrorManagement.ValidateEmail(Email);
+                    break;
+                default:
+                    return string.Empty;
+            }
+        }
+        #endregion
 
 
 

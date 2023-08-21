@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -7,16 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\BUTTON_DELETE.png" />
     <None Remove="Resources\BUTTON_EXPORT.png" />
-    <None Remove="Resources\BUTTON_REFRESH.PNG" />
+    <None Remove="Resources\BUTTON_REFRESH.png" />
     <None Remove="Resources\BUTTON_RUN.png" />
     <None Remove="Resources\BUTTON_SAVE.png" />
+    <None Remove="Resources\BUTTON_SEARCH.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\BUTTON_EXPORT.png" />
-    <Resource Include="Resources\BUTTON_RUN.png" />
-    <Resource Include="Resources\BUTTON_SAVE.png" />
+    <Resource Include="Resources\BUTTON_DELETE.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\BUTTON_EXPORT.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\BUTTON_REFRESH.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\BUTTON_RUN.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\BUTTON_SEARCH.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
