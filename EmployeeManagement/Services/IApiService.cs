@@ -14,7 +14,6 @@ namespace EmployeeManagement.Services
         Task<Employee> GetEmployeeAsync(int id);
         Task<List<Employee>> GetEmployeesAsync();
         Task<List<Employee>> GetEmployeesAsync(SearchParameters sp);
-
         Task<Employee> UpdateEmployeeAsync(int id, Employee employee);
     }
 }

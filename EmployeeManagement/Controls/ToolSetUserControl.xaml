@@ -87,7 +87,7 @@
             <Image Source="pack://application:,,,/Common.Images;component/Resources/BUTTON_SEARCH.PNG" Stretch="None"/>
         </Button>
 
-        <Button x:Name="RefreshButton" Grid.Column="7" Command="{Binding RefreshCommand}"  ToolTip="Refresh the UI to default saerch parameters" Style="{StaticResource ImageButton}" HorizontalAlignment="Left"  CommandParameter="{Binding}">
+        <Button x:Name="RefreshButton" Grid.Column="7" Command="{Binding RefreshCommand}"  ToolTip="Refresh the UI to default search parameters" Style="{StaticResource ImageButton}" HorizontalAlignment="Left"  CommandParameter="{Binding}">
             <Image Source="pack://application:,,,/Common.Images;component/Resources/BUTTON_REFRESH.png" Stretch="None"/>
         </Button>
 

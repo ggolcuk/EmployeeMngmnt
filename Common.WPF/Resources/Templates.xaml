@@ -75,8 +75,8 @@
             </Setter.Value>
         </Setter>
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="uiUtilities:PopupFocusBehavior.IsPopupOpenOnFocus" Value="True" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />        
+        <Setter Property="VerticalContentAlignment" Value="Center" />        
     </Style>
 
     <Style x:Key="TextBoxSelected" TargetType="TextBox" BasedOn="{StaticResource TextBoxValidated}">

@@ -48,8 +48,8 @@ namespace EmployeeManagement.ViewModels
             UpdateCommand = new DelegatingCommand(CreateOrUpdate);
             DeleteCommand = new DelegatingCommand(Delete);
 
-            ExportAllCommand = new DelegatingCommand(ExportAllToTxt);
-            ExportSearchCommand = new DelegatingCommand(ExportFilteredToTxt);
+            ExportAllCommand = new DelegatingCommand(ExportAllToCsv);
+            ExportSearchCommand = new DelegatingCommand(ExportFilteredToCsv);
 
             AllGenderOptions = new GenderType[] { GenderType.Female, GenderType.Male };
             AllStatusOptions = new StatusType[] { StatusType.Active, StatusType.Inactive};
@@ -58,25 +58,25 @@ namespace EmployeeManagement.ViewModels
 
         }
 
-        internal async void ExportAllToTxt(object parameter)
+        internal async void ExportAllToCsv(object parameter)
         {
             var loadingMessageWindow = new LoadingMessageWindow();
             loadingMessageWindow.Show(); // won't block the UI
-            await ExportEmployeesToTxTAsync(false);
+            await ExportEmployeesToCsvAsync(false);
             loadingMessageWindow.Close();
         }
 
-        internal async void ExportFilteredToTxt(object parameter)
+        internal async void ExportFilteredToCsv(object parameter)
         {
             var loadingMessageWindow = new LoadingMessageWindow();
             loadingMessageWindow.Show(); // won't block the UI
 
-            await ExportEmployeesToTxTAsync(true);
+            await ExportEmployeesToCsvAsync(true);
 
             loadingMessageWindow.Close();
         }
 
-        public async Task ExportEmployeesToTxTAsync(bool useSearchParameters)
+        public async Task ExportEmployeesToCsvAsync(bool useSearchParameters)
         {
 
            
@@ -105,25 +105,24 @@ namespace EmployeeManagement.ViewModels
             if (allEmployees.Count > 0)
             {
                 // Call method to save employees to TXT file
-                SaveEmployeesToTxt(allEmployees);
+                SaveEmployeesToCsv(allEmployees);
             }
         }
 
-        private void SaveEmployeesToTxt(List<Employee> employees)
+        private void SaveEmployeesToCsv(List<Employee> employees)
         {
             if (employees == null || employees.Count == 0)
             {
                 MessageBox.Show("No data to print.");
                 return;
             }
-                
 
             // Create a SaveFileDialog to allow the user to choose the file location
             var saveFileDialog = new SaveFileDialog
             {
-                Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*",
-                Title = "Save Employees to Text File",
-                FileName = "EmployeeData.txt"
+                Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
+                Title = "Save Employees to CSV File",
+                FileName = "EmployeeData.csv"
             };
 
             if (saveFileDialog.ShowDialog() == true)
@@ -132,7 +131,7 @@ namespace EmployeeManagement.ViewModels
                 {
                     // Write the property names as the first line
                     var propertyNames = typeof(Employee).GetProperties().Select(property => property.Name);
-                    writer.WriteLine(string.Join("\t", propertyNames));
+                    writer.WriteLine(string.Join(",", propertyNames));
 
                     // Write employee data
                     foreach (var employee in employees)
@@ -140,13 +139,14 @@ namespace EmployeeManagement.ViewModels
                         var values = typeof(Employee).GetProperties().Select(property =>
                         {
                             var value = property.GetValue(employee);
-                            return value != null ? value.ToString() : string.Empty;
+                            // Enclose the value in double quotes and escape double quotes within the value
+                            return value != null ? "\"" + value.ToString().Replace("\"", "\"\"") + "\"" : string.Empty;
                         });
-                        writer.WriteLine(string.Join("\t", values));
+                        writer.WriteLine(string.Join(",", values));
                     }
                 }
 
-                MessageBox.Show("Employees data saved to the text file.");
+                MessageBox.Show("Employees data saved to the CSV file.");
             }
         }
 
